@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Filter, SlidersHorizontal, Grid, List as ListIcon } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import { PRODUCTS } from '../config';
 import ProductCard from '../components/ProductCard';
 import { useCocobase } from '../context/CocobaseContext';
@@ -8,6 +9,7 @@ import { Product } from '../types';
 
 const Shop: React.FC = () => {
   const { db } = useCocobase();
+  const [searchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   
@@ -17,6 +19,13 @@ const Shop: React.FC = () => {
   const [sortBy, setSortBy] = useState('newest');
 
   const categories = ['all', 'smartphones', 'laptops', 'wearables', 'audio'];
+
+  useEffect(() => {
+    const query = searchParams.get('search');
+    if (query) {
+      setSearchTerm(query);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchProducts = async () => {

@@ -4,6 +4,8 @@ import { Mail, Lock, User, Zap, Loader2, ShieldCheck } from 'lucide-react';
 import { useCocobase } from '../context/CocobaseContext';
 import { motion } from 'framer-motion';
 
+import { sanitizeInput, validateEmail, validatePassword, mapAuthError } from '../utils/security';
+
 const Signup: React.FC = () => {
   const { db } = useCocobase();
   const navigate = useNavigate();
@@ -18,27 +20,43 @@ const Signup: React.FC = () => {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
+    setError(null);
+
+    const safeName = sanitizeInput(formData.name);
+    const safeEmail = sanitizeInput(formData.email);
+    const safePassword = sanitizeInput(formData.password);
+
+    if (!validateEmail(safeEmail)) {
+      setError("Invalid uplink email address.");
+      return;
+    }
+
+    const passwordCheck = validatePassword(safePassword);
+    if (!passwordCheck.valid) {
+      setError(passwordCheck.message!);
+      return;
+    }
+
+    if (safePassword !== formData.confirmPassword) {
       setError("Access Ciphers do not match.");
       return;
     }
 
     setLoading(true);
-    setError(null);
 
     try {
       if (db) {
         await db.auth.register({
-          email: formData.email,
-          password: formData.password,
-          data: { name: formData.name }
+          email: safeEmail,
+          password: safePassword,
+          data: { name: safeName }
         });
         navigate('/login');
       } else {
         throw new Error("Neural registration system offline.");
       }
     } catch (err: any) {
-      setError(err.message || "Registration failed.");
+      setError(mapAuthError(err));
     } finally {
       setLoading(false);
     }

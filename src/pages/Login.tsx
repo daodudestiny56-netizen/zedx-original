@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Zap, Github, Globe, Loader2 } from 'lucide-react';
 import { useCocobase } from '../context/CocobaseContext';
 import { motion } from 'framer-motion';
-import { CONFIG } from '../config';
+import { sanitizeInput, validateEmail, mapAuthError } from '../utils/security';
 
 const Login: React.FC = () => {
   const { db, refreshUser } = useCocobase();
@@ -18,9 +18,18 @@ const Login: React.FC = () => {
     setLoading(true);
     setError(null);
 
+    const safeEmail = sanitizeInput(email);
+    const safePassword = sanitizeInput(password);
+
+    if (!validateEmail(safeEmail)) {
+      setError("Invalid email format detected.");
+      setLoading(false);
+      return;
+    }
+
     try {
       if (db) {
-        const result = await db.auth.login({ email, password });
+        const result = await db.auth.login({ email: safeEmail, password: safePassword });
         if (result.requires_2fa) {
            setError("2FA Protocol required. Check your secure line.");
         } else {
@@ -28,11 +37,10 @@ const Login: React.FC = () => {
            navigate('/');
         }
       } else {
-        // Mock fallback if db is not ready
-        throw new Error("Neural link system offline. Please try again later.");
+        throw new Error("Neural link system offline.");
       }
     } catch (err: any) {
-      setError(err.message || "Authentication failed.");
+      setError(mapAuthError(err));
     } finally {
       setLoading(false);
     }

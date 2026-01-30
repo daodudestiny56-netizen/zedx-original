@@ -66,9 +66,25 @@ const Navbar: React.FC = () => {
 
         {/* Actions */}
         <div className="flex items-center gap-4">
-          <button className="p-2 text-[#f0f6fc] hover:text-[#58a6ff] transition-colors">
-            <Search size={20} />
-          </button>
+          <form 
+            onSubmit={(e) => {
+              e.preventDefault();
+              // @ts-ignore
+              const term = e.target.searchProp.value.trim();
+              if (term) window.location.href = `/shop?search=${encodeURIComponent(term)}`;
+            }} 
+            className="relative flex items-center group"
+          >
+             <input 
+               name="searchProp"
+               type="text" 
+               placeholder="Search..." 
+               className="w-0 group-hover:w-32 focus:w-32 transition-all duration-300 bg-transparent border-b border-transparent focus:border-[#58a6ff] text-white text-sm outline-none placeholder:text-transparent focus:placeholder:text-[#484f58]"
+             />
+             <button type="submit" className="p-2 text-[#f0f6fc] hover:text-[#58a6ff] transition-colors">
+               <Search size={20} />
+             </button>
+          </form>
           
           <Link to="/cart" className="relative p-2 text-[#f0f6fc] hover:text-[#58a6ff] transition-colors">
             <ShoppingCart size={20} />
