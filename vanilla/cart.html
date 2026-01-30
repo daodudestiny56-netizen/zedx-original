@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your System Cart - ZedX Original</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles/main.css">
+    
+    <style>
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+        .cart-table th {
+            text-align: left;
+            padding: 20px;
+            color: var(--color-accent-primary);
+            border-bottom: 1px solid rgba(0,240,255,0.2);
+            font-family: var(--font-heading);
+            text-transform: uppercase;
+        }
+        .cart-table td {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .cart-item-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid rgba(0,240,255,0.2);
+        }
+        .cart-summary {
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(0,240,255,0.2);
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        .summary-total {
+            border-top: 1px solid rgba(0,240,255,0.2);
+            padding-top: 15px;
+            margin-top: 15px;
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--color-accent-primary);
+        }
+        @media (max-width: 768px) {
+            .cart-table thead { display: none; }
+            .cart-table td { display: block; padding: 10px 0; border: none; }
+            .cart-item-info { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+    <!-- Cocobase SDK -->
+    <script type="module">
+        import { Cocobase } from "https://esm.sh/cocobase";
+        window.Cocobase = Cocobase;
+    </script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="index.html" class="logo">
+                    <span class="logo-icon">⚡</span>
+                    <span class="logo-text">ZedX<span class="logo-accent">Original</span></span>
+                </a>
+                
+                <div class="nav-links" id="navLinks">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="shop.html" class="nav-link">Shop</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </div>
+                
+                <div class="nav-actions">
+                    <button class="icon-btn" id="searchBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                    <a href="login.html" class="icon-btn" title="Login">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </a>
+                    <a href="cart.html" class="icon-btn cart-btn">
+                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+                    <button class="menu-toggle" id="menuToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="page-header" style="margin-top: 80px; padding: 60px 0; background: rgba(255,255,255,0.02);">
+        <div class="container">
+            <h1 class="section-title">SYSTEM CART</h1>
+            <p style="color: var(--color-text-secondary);">Manage your selected hardware and finalize acquisition.</p>
+        </div>
+    </header>
+
+    <!-- Cart Content -->
+    <section class="cart-section" style="padding: 60px 0;">
+        <div class="container">
+            <div class="cart-layout" style="display: grid; grid-template-columns: 1fr 350px; gap: 40px;" id="cartLayout">
+                <div class="cart-items-wrapper">
+                    <table class="cart-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Subtotal</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="cartTableBody">
+                            <!-- Items here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="cart-summary-wrapper">
+                    <div class="cart-summary">
+                        <h3 style="font-family: var(--font-heading); margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">ORDER SUMMARY</h3>
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="summarySubtotal">$0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Shipping</span>
+                            <span id="summaryShipping">Calculated at next step</span>
+                        </div>
+                        <div class="summary-total">
+                            <span>TOTAL</span>
+                            <span id="summaryTotal">$0.00</span>
+                        </div>
+                        
+                        <button class="btn btn-primary btn-glow" style="width: 100%; margin-top: 30px; justify-content: center;">PROCEED TO CHECKOUT</button>
+                        <a href="shop.html" style="display: block; text-align: center; margin-top: 20px; color: var(--color-text-secondary);">Continue Shopping</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="emptyCart" style="display: none; text-align: center; padding: 100px 0;">
+                <h2 style="font-family: var(--font-heading); margin-bottom: 20px;">SYSTEM EMPTY</h2>
+                <p style="color: var(--color-text-secondary); margin-bottom: 30px;">Your cart data is currently null. Initiate shopping sequence.</p>
+                <a href="shop.html" class="btn btn-primary">GO TO SHOP</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 ZedX Original. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/cart_page.js"></script>
+</body>
+</html>

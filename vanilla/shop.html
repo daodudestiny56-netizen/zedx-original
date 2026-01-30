@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - ZedX Original</title>
+    <meta name="description" content="Browse our full collection of futuristic tech Gadgets at ZedX Original">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles/main.css">
+    
+    <!-- CocoBase SDK (ESM) -->
+    <script type="module">
+        import { Cocobase } from "https://esm.sh/cocobase";
+        window.Cocobase = Cocobase;
+    </script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="index.html" class="logo">
+                    <span class="logo-icon">⚡</span>
+                    <span class="logo-text">ZedX<span class="logo-accent">Original</span></span>
+                </a>
+                
+                <div class="nav-links" id="navLinks">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="shop.html" class="nav-link active">Shop</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </div>
+                
+                <div class="nav-actions">
+                    <button class="icon-btn" id="searchBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                    <a href="login.html" class="icon-btn" title="Login">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </a>
+                    <a href="cart.html" class="icon-btn cart-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+                    <button class="menu-toggle" id="menuToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Shop Content -->
+    <section class="shop-section" style="padding: 120px 0 60px;">
+        <div class="container">
+            <div class="shop-header" style="margin-bottom: 40px; text-align: center;">
+                <h1 class="section-title">THE ARMORY</h1>
+                <p style="color: var(--color-text-secondary);">Browse our catalog of state-of-the-art enhancements.</p>
+            </div>
+
+            <div class="shop-layout">
+                <style>
+                    .shop-layout {
+                        display: grid;
+                        grid-template-columns: 280px 1fr;
+                        gap: 40px;
+                    }
+                    @media (max-width: 968px) {
+                        .shop-layout {
+                            grid-template-columns: 1fr;
+                        }
+                    }
+                </style>
+                 <!-- Sidebar Filters -->
+                 <aside class="shop-sidebar">
+                    <div class="filter-group">
+                        <h4 class="filter-title">SYSTEM CATEGORY</h4>
+                        <div class="filter-options">
+                            <label class="filter-checkbox">
+                                <input type="radio" name="category" value="all" checked>
+                                <span class="checkmark"></span> All Hardware
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="radio" name="category" value="smartphones">
+                                <span class="checkmark"></span> Smartphones
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="radio" name="category" value="laptops">
+                                <span class="checkmark"></span> Laptops
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="radio" name="category" value="audio">
+                                <span class="checkmark"></span> Audio
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="radio" name="category" value="wearables">
+                                <span class="checkmark"></span> Wearables
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4 class="filter-title">PRICE CAP (USD)</h4>
+                        <input type="range" min="0" max="5000" step="100" value="5000" class="price-range" id="priceRange">
+                        <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.9rem;">
+                            <span>$0</span>
+                            <span id="priceValue">$5,000</span>
+                        </div>
+                    </div>
+                 </aside>
+
+                 <!-- Main Shop View -->
+                 <main class="shop-main">
+                    <div class="shop-toolbar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 15px; background: rgba(255,255,255,0.02); border-radius: 10px; border: 1px solid rgba(88,166,255,0.1);">
+                        <div class="shop-stats" id="shopStats">Showing all 8 results</div>
+                        <div class="shop-sorting">
+                            <select id="sortSelect" style="background: transparent; color: white; border: 1px solid rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 5px;">
+                                <option value="featured">Featured</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="newest">Newest Arrivals</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="products-grid" id="shopProducts">
+                        <!-- Products Rendered by JS -->
+                    </div>
+                 </main>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 ZedX Original. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Search Modal -->
+    <div class="search-modal" id="searchModal">
+        <div class="search-modal-content">
+            <button class="search-close" id="searchClose">&times;</button>
+            <input type="text" class="search-input" placeholder="Search products..." id="searchInput">
+            <div class="search-results" id="searchResults"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/shop.js"></script>
+</body>
+</html>
